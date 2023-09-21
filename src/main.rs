@@ -49,7 +49,7 @@ fn set_database() -> Result<(), PostgresError> {
     let mut client = Client::connect(DB_URL, NoTls)?;
     client.batch_execute(
         "
-        CREATE TABLE IF NOT EXISTS taskss (
+        CREATE TABLE IF NOT EXISTS tasks (
             id SERIAL PRIMARY KEY,
             title VARCHAR NOT NULL,
             description VARCHAR NOT NULL
