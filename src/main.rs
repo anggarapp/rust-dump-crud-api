@@ -36,6 +36,7 @@ fn main() {
     for stream in listener.incoming() {
         match stream {
             Ok(stream) => {
+                println!("Accepted Request");
                 handle_client(stream);
             }
             Err(e) => {
@@ -71,6 +72,7 @@ fn get_id(request: &str) -> &str {
 }
 
 fn get_task_request_body(request: &str) -> Result<Task, serde_json::Error> {
+    println!("{}", request);
     serde_json::from_str(request.split("\r\n\r\n").last().unwrap_or_default())
 }
 
@@ -113,9 +115,12 @@ fn handle_post_request(request: &str) -> (String, String) {
                 )
                 .unwrap();
 
-            (OK_RESPONSE.to_string(), "User created".to_string())
+            (OK_RESPONSE.to_string(), "Task created".to_string())
         }
-        _ => (INTERNAL_ERROR.to_string(), "Internal error".to_string()),
+        _ => (
+            INTERNAL_ERROR.to_string(),
+            "Internal error here".to_string(),
+        ),
     }
 }
 
@@ -188,7 +193,7 @@ fn handle_put_request(request: &str) -> (String, String) {
                 )
                 .unwrap();
 
-            (OK_RESPONSE.to_string(), "User updated".to_string())
+            (OK_RESPONSE.to_string(), "Task updated".to_string())
         }
         _ => (INTERNAL_ERROR.to_string(), "Internal error".to_string()),
     }
@@ -207,10 +212,10 @@ fn handle_delete_request(request: &str) -> (String, String) {
 
             //if rows affected is 0, user not found
             if rows_affected == 0 {
-                return (NOT_FOUND.to_string(), "User not found".to_string());
+                return (NOT_FOUND.to_string(), "Task not found".to_string());
             }
 
-            (OK_RESPONSE.to_string(), "User deleted".to_string())
+            (OK_RESPONSE.to_string(), "Task deleted".to_string())
         }
         _ => (INTERNAL_ERROR.to_string(), "Internal error".to_string()),
     }
